@@ -17,13 +17,10 @@ function DataFetching() {
     useEffect(() => {
         const raw = localStorage.getItem('id') || []
         setId(JSON.parse(raw))
-        const reb = localStorage.getItem('post') || []
-        setPost(JSON.parse(reb))
     }, [])
 
     useEffect(() => {
         localStorage.setItem('id', JSON.stringify(id))
-        localStorage.setItem('post', JSON.stringify(post))
     }, [id])
 
     useEffect(() => {
