@@ -1,20 +1,38 @@
-import React, {useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import axios from 'axios'
 
 function DataFetching() {
 
-    const [post, setPost] = useState({})
     const [id, setId] = useState(1)
-    const [idFromButtonClick, setIdFromButtonClick] = useState(1);
+    const [post, setPost] = useState({})
+    const [idFromButtonClick, setIdFromButtonClick] = useState(1)
+
     useEffect(() => {
         axios.get(`https://jsonplaceholder.typicode.com/posts/${idFromButtonClick}`)
-        .then(res => {
-            console.log(res)
-            setPost(res.data)
-        })
-        .catch(err => {
-            console.log(err)
-        })
+            .then(res => {
+                setPost(res.data)
+            })
+    }, [idFromButtonClick])
+
+    useEffect(() => {
+        const raw = localStorage.getItem('id') || []
+        setId(JSON.parse(raw))
+        const reb = localStorage.getItem('post') || []
+        setPost(JSON.parse(reb))
+    }, [])
+
+    useEffect(() => {
+        localStorage.setItem('id', JSON.stringify(id))
+        localStorage.setItem('post', JSON.stringify(post))
+    }, [id])
+
+    useEffect(() => {
+        const reb = localStorage.getItem('idFromButtonClick') || []
+        setIdFromButtonClick(JSON.parse(reb))
+    }, [])
+
+    useEffect(() => {
+        localStorage.setItem('idFromButtonClick', JSON.stringify(idFromButtonClick))
     }, [idFromButtonClick])
 
     const handleClick = () => {
@@ -24,14 +42,8 @@ function DataFetching() {
     return (
         <div>
             <input type='text' value={id} onChange={e => setId(e.target.value)}></input>
-            <button type="button" onClick={handleClick}>Button Fetch</button>
+            <button onClick={handleClick}>Push button</button>
             <div>{post.title}</div>
-            {/* <ul>
-                {
-                    post.map(post => (
-                    <li key={post.id}>{post.title}</li>
-                    ))}
-            </ul> */}
         </div>
     )
 }
